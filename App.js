@@ -1,25 +1,11 @@
 import React from 'react';
-import { Platform, StyleSheet, Text, View, ImageBackground, Image } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { createBottomTabNavigator, createAppContainer, BottomTabBar } from 'react-navigation';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo';
-import FAB from 'react-native-fab'
-import { Ionicons } from '@expo/vector-icons';
-
-export default class App extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <ImageBackground style={styles.header} source={{ uri: 'https://via.placeholder.com/800x450' }}>
-          <LinearGradient start={[.5, 0]} end={[.5, 1]} colors={['transparent', 'rgba(0,0,0,.25)']} style={styles.headerBackground}></LinearGradient>
-          <Text style={[styles.text, styles.textHeader]}>Personal records</Text>
-        </ImageBackground>
-        <View style={{flex: 1}}>
-          <Image source={require('./assets/icons/benchmark.svg')} style={{width: 60, height: 60}} />
-        </View>
-        <FAB buttonColor="#EEFF41" iconTextColor="#212121" onClickAction={() => {console.log("FAB pressed")}} visible={true} iconTextComponent={<Ionicons name={Platform.OS === 'ios' ? 'ios-add' : 'md-add'}/>} />
-      </View>
-    );
-  }
-}
+import RecordsScreen from './views/records/records-screen.js';
+import BenchmarksScreen from './views/benchmarks/benchmarks-screen.js';
+import SettingsScreen from './views/settings/settings-screen.js';
 
 const styles = StyleSheet.create({
   container: {
@@ -29,24 +15,54 @@ const styles = StyleSheet.create({
   text : {
     color: '#ffffff'
   },
-  header: {
+  tabBar: {
+    backgroundColor: '#212121',
+    borderTopColor: '#212121',
+    borderWidth: 0
+  },
+  tabBarShadow: {
+    height: 8,
     width: '100%',
-    flexDirection: 'row',
-    aspectRatio: 1.7,
-    alignItems: 'flex-end',
-  },
-  headerBackground: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0
-  },
-  textHeader: {
-    fontSize: 34,
-    fontWeight: 'bold',
-    marginLeft: 16,
-    marginRight: 16,
-    marginBottom: 12
+    backgroundColor: '#212121'
   }
 });
+
+const TabBarComponent = (props) => (
+    <View>
+      <LinearGradient start={[.5, 0]} end={[.5, 1]} colors={['transparent', 'rgba(0,0,0,.12)']} style={styles.tabBarShadow}></LinearGradient>
+      <BottomTabBar {...props} />
+    </View>
+  );
+
+const TabNavigator = createBottomTabNavigator({
+  Records: RecordsScreen,
+  Benchmarks: BenchmarksScreen,
+  Settings: SettingsScreen,
+},
+{
+  defaultNavigationOptions: ({ navigation }) => ({
+    tabBarIcon: ({ focused, horizontal, tintColor }) => {
+      const { routeName } = navigation.state;
+      let iconName;
+      if (routeName === 'Records') {
+        iconName = `trophy-award`;
+      } else if (routeName === 'Benchmarks') {
+        iconName = `pulse`;
+      } else {
+        iconName = `tune`;
+      }
+
+      // You can return any component that you like here!
+      return <MaterialCommunityIcons name={iconName} size={25} color={tintColor} />;
+    },
+  }),
+  tabBarOptions: {
+    activeTintColor: '#EEFF41',
+    inactiveTintColor: 'rgba(255,255,255,.54)',
+    style: styles.tabBar
+  },
+  tabBarComponent: props =>
+      <TabBarComponent {...props} />
+});
+
+export default createAppContainer(TabNavigator);
