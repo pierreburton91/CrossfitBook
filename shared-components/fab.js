@@ -27,7 +27,7 @@ export default class FAB extends React.Component {
 const styles = StyleSheet.create({
     fab: {
       position: 'absolute',
-      bottom: 8,
+      bottom: 24,
       right: 16,
       borderRadius: 50,
       height: 56,
