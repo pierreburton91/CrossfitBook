@@ -1,16 +1,16 @@
 import React from 'react';
-import { View, Platform, StyleSheet, TouchableNativeFeedback, TouchableOpacity } from 'react-native';
+import { View, Platform, StyleSheet, TouchableNativeFeedback, TouchableHighlight } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export default class FAB extends React.Component {
     render() {
         let fab;
         if (Platform.OS === 'ios') {
-          fab = <TouchableOpacity onPress={this.props.onPress} >
+          fab = <TouchableHighlight onPress={this.props.onPress} >
             <View style={styles.fab}>
                 <Ionicons style={styles.fabIcon} name='ios-add' />
             </View>
-          </TouchableOpacity>
+          </TouchableHighlight>
         } else {
           fab = <TouchableNativeFeedback onPress={this.props.onPress} background={TouchableNativeFeedback.SelectableBackground()}>
               <View style={styles.fab}>

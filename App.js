@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { createBottomTabNavigator, createAppContainer, BottomTabBar } from 'react-navigation';
+import { StyleSheet } from 'react-native';
+import { createBottomTabNavigator, createAppContainer, createStackNavigator } from 'react-navigation';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import RecordDetailsScreen from './views/records/record-details-screen.js';
 import RecordsScreen from './views/records/records-screen.js';
 import BenchmarksScreen from './views/benchmarks/benchmarks-screen.js';
 import SettingsScreen from './views/settings/settings-screen.js';
@@ -11,17 +12,36 @@ const styles = StyleSheet.create({
     backgroundColor: '#212121',
     borderTopColor: '#212121',
     borderWidth: 0
-  },
+  }
+});
+
+const RecordsStack = createStackNavigator({
+  Main: RecordsScreen,
+  Details: RecordDetailsScreen
+},
+{
+  initialRouteName: 'Main',
+  headerMode: 'none',
+  navigationOptions: ({navigation}) => {
+    const { routeName } = navigation.state.routes[navigation.state.index];
+    let navigationOptions = {};
+
+    if (routeName === 'Details') {
+      navigationOptions.tabBarVisible = false;
+    }
+
+    return navigationOptions;
+  }
 });
 
 const TabNavigator = createBottomTabNavigator({
-  Records: RecordsScreen,
+  Records: RecordsStack,
   Benchmarks: BenchmarksScreen,
   Settings: SettingsScreen,
 },
 {
   defaultNavigationOptions: ({ navigation }) => ({
-    tabBarIcon: ({ focused, horizontal, tintColor }) => {
+    tabBarIcon: ({ tintColor }) => {
       const { routeName } = navigation.state;
       let iconName;
       if (routeName === 'Records') {
@@ -34,7 +54,7 @@ const TabNavigator = createBottomTabNavigator({
 
       // You can return any component that you like here!
       return <MaterialCommunityIcons name={iconName} size={25} color={tintColor} />;
-    },
+    }
   }),
   tabBarOptions: {
     activeTintColor: '#EEFF41',
