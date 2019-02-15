@@ -12,6 +12,7 @@ export default class RecordsScreen extends React.Component {
 
         this.state = {
             scrollY: new Animated.Value(0),
+            scrollEnabled: true
         }
     }
     
@@ -19,18 +20,22 @@ export default class RecordsScreen extends React.Component {
         navigation.navigate('Details', {record: element});
     }
 
+    _handleElementSwipe(scrollEnabled) {
+        return scrollEnabled;
+    } // TODO: Fix scroll while swipe
+
     render() {
         const dataStub = [
-            {title: 'Hello1', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
+            {title: 'Hello1', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
         ];
         
         const headerHeight = this.state.scrollY.interpolate({
@@ -51,10 +56,11 @@ export default class RecordsScreen extends React.Component {
         return (
         <View style={styles.container}>
             <AnimatedFlatList
-                contentContainerStyle={{paddingTop: 200}}
+                scrollEnabled={this.state.scrollEnabled}
+                contentContainerStyle={{paddingTop: 200, paddingBottom: 80}}
                 data={dataStub}
                 renderItem={({item, index}) =>
-                    <RecordComponent _handleRecordSelect={this._handleRecordSelect} navigation={this.props.navigation} key={index} record={item} />
+                    <RecordComponent _swipe={this._handleElementSwipe} _handleRecordSelect={this._handleRecordSelect} navigation={this.props.navigation} key={index} record={item} />
                 }
                 scrollEventThrottle={0}
                 onScroll={Animated.event(
