@@ -9,7 +9,7 @@ export default class HeaderHero extends React.Component {
             <ImageBackground style={[styles.header, { height: this.props.height }]} source={Images.banners[this.props.banner]} resizeMode='cover'>
                 <ImageBackground style={[styles.header, { height: this.props.height, opacity: this.props.blur }]} source={Images.banners[this.props.banner]} blurRadius={10} resizeMode='cover'></ImageBackground>
                 <LinearGradient start={[.5, 0]} end={[.5, 1]} colors={['transparent', 'rgba(0,0,0,.25)']} style={styles.headerOverlay}></LinearGradient>
-                <Text style={[styles.text, styles.textHeader]}>{this.props.title}</Text>
+                <Text style={styles.textHeader}>{this.props.title}</Text>
             </ImageBackground>
         );
     }

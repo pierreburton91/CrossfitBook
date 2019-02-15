@@ -16,21 +16,21 @@ export default class RecordsScreen extends React.Component {
     }
     
     _handleRecordSelect(element, navigation) {
-        navigation.navigate('Details', {key: element});
+        navigation.navigate('Details', {record: element});
     }
 
     render() {
         const dataStub = [
-            {title: 'Hello1', text: 'My first item', value: '110 Kg', key: '0'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', key: '1'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', key: '2'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', key: '3'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', key: '4'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', key: '5'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', key: '6'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', key: '7'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', key: '8'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', key: '9'},
+            {title: 'Hello1', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
+            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '0/01/2018'},
         ];
         
         const headerHeight = this.state.scrollY.interpolate({
@@ -53,13 +53,14 @@ export default class RecordsScreen extends React.Component {
             <AnimatedFlatList
                 contentContainerStyle={{paddingTop: 200}}
                 data={dataStub}
-                renderItem={({item}) =>
-                    <RecordComponent _handleRecordSelect={this._handleRecordSelect} navigation={this.props.navigation} record={item} />
+                renderItem={({item, index}) =>
+                    <RecordComponent _handleRecordSelect={this._handleRecordSelect} navigation={this.props.navigation} key={index} record={item} />
                 }
                 scrollEventThrottle={0}
                 onScroll={Animated.event(
                     [{nativeEvent: {contentOffset: {y: this.state.scrollY}}}]
                 )}
+                keyExtractor={(item, index) => item + index}
             />
             <AnimatedHeaderHero title={"Personal records"} banner={'records'} height={headerHeight} blur={headerBlur} />
             <LinearGradient start={[.5, 0]} end={[.5, 1]} colors={['transparent', 'rgba(0,0,0,.16)']} style={styles.tabBarShadow}></LinearGradient>

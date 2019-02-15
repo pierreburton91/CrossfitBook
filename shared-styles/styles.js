@@ -9,6 +9,12 @@ export default styles = StyleSheet.create({
     text : {
         color: '#ffffff'
     },
+    textYellow: {
+        color: '#EEFF41'
+    },
+    textMuted: {
+        color: 'rgba(255,255,255,.54)'
+    },
     tabBarShadow: {
         position: 'absolute',
         bottom: 8,

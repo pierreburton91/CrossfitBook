@@ -5,8 +5,8 @@ export default class RecordComponent extends React.Component {
     render() {
         let listElement;
         if (Platform.OS === 'ios') {
-            listElement = <TouchableHighlight onPress={() => this.props._handleRecordSelect(this.props.record.key, this.props.navigation)} > 
-                        <View key={this.props.record.key} style={styles.recordContainer}>
+            listElement = <TouchableHighlight onPress={() => this.props._handleRecordSelect(this.props.record, this.props.navigation)} > 
+                        <View key={this.props.index} style={styles.recordContainer}>
                             <View>
                                 <Text style={styles.recordTitle}>{this.props.record.title}</Text>
                                 <Text style={styles.recordText}>{this.props.record.text}</Text>
@@ -15,8 +15,8 @@ export default class RecordComponent extends React.Component {
                         </View>
                         </TouchableHighlight>
         } else {
-            listElement = <TouchableNativeFeedback onPress={() => this.props._handleRecordSelect(this.props.record.key, this.props.navigation)} background={TouchableNativeFeedback.Ripple('rgba(255,255,255,.25)')} > 
-                        <View key={this.props.record.key} style={styles.recordContainer}>
+            listElement = <TouchableNativeFeedback onPress={() => this.props._handleRecordSelect(this.props.record, this.props.navigation)} background={TouchableNativeFeedback.Ripple('rgba(255,255,255,.25)')} > 
+                        <View key={this.props.index} style={styles.recordContainer}>
                             <View>
                                 <Text style={styles.recordTitle}>{this.props.record.title}</Text>
                                 <Text style={styles.recordText}>{this.props.record.text}</Text>
