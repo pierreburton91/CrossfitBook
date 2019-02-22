@@ -9,7 +9,7 @@ export default class RecordComponent extends React.Component {
             {
                 backgroundColor: '#e53935',
                 underlayColor: '#ab000d',
-                onPress: () => { console.log('Delete item') },
+                onPress: () => { this.props._handleDeleteRecord(this.props.record) },
                 component: <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} ><MaterialCommunityIcons size={28} name='trash-can-outline' color='#ffffff' /></View>
             }
         ];
@@ -24,7 +24,7 @@ export default class RecordComponent extends React.Component {
 
         let listElement;
         if (Platform.OS === 'ios') {
-            listElement = <Swipeout key={this.props.index} scroll={(scrollEnabled) => { this.props._swipe(scrollEnabled)}} right={swipeRightOptns} left={swipeLeftOptns} sensitivity={25} autoClose={true} backgroundColor='transparent'>
+            listElement = <Swipeout key={this.props.index} right={swipeRightOptns} left={swipeLeftOptns} sensitivity={25} autoClose={true} backgroundColor='transparent'>
                             <TouchableHighlight onPress={() => this.props._handleRecordSelect(this.props.record, this.props.navigation)} scroll> 
                                 <View style={styles.recordContainer}>
                                     <View style={styles.recordDataContainer} >
@@ -38,7 +38,7 @@ export default class RecordComponent extends React.Component {
                             </TouchableHighlight>
                         </Swipeout>
         } else {
-            listElement =  <Swipeout key={this.props.index} scroll={(scrollEnabled) => { this.props._swipe(scrollEnabled)}} right={swipeRightOptns} left={swipeLeftOptns} sensitivity={25} autoClose={true} backgroundColor='transparent'>
+            listElement =  <Swipeout key={this.props.index} right={swipeRightOptns} left={swipeLeftOptns} sensitivity={25} autoClose={true} backgroundColor='transparent'>
                             <TouchableNativeFeedback onPress={() => this.props._handleRecordSelect(this.props.record, this.props.navigation)} background={TouchableNativeFeedback.Ripple('rgba(255,255,255,.25)')} >
                                 <View style={styles.recordContainer}>
                                     <View style={styles.recordDataContainer} >

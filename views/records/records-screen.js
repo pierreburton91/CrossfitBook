@@ -12,32 +12,36 @@ export default class RecordsScreen extends React.Component {
 
         this.state = {
             scrollY: new Animated.Value(0),
-            scrollEnabled: true
+            dataStub: [
+                {title: 'Hello1', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
+            ]
         }
+
+        this._handleDeleteRecord = this._handleDeleteRecord.bind(this);
     }
     
     _handleRecordSelect(element, navigation) {
         navigation.navigate('Details', {record: element});
     }
 
-    _handleElementSwipe(scrollEnabled) {
-        return scrollEnabled;
-    } // TODO: Fix scroll while swipe
+    _handleDeleteRecord(record) {
+        const index = this.state.dataStub.indexOf(record);
+        const temp = this.state.dataStub.slice();
+        temp.splice(index, 1);
+        this.setState({dataStub: temp, scrollY: new Animated.Value(0)});
+    }
 
     render() {
-        const dataStub = [
-            {title: 'Hello1', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-            {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-        ];
-        
+        const recordsList = this.state.dataStub.slice();
         const headerHeight = this.state.scrollY.interpolate({
             inputRange: [0, 112],
             outputRange: [200, 88],
@@ -56,11 +60,10 @@ export default class RecordsScreen extends React.Component {
         return (
         <View style={styles.container}>
             <AnimatedFlatList
-                scrollEnabled={this.state.scrollEnabled}
                 contentContainerStyle={{paddingTop: 200, paddingBottom: 80}}
-                data={dataStub}
+                data={recordsList}
                 renderItem={({item, index}) =>
-                    <RecordComponent _swipe={this._handleElementSwipe} _handleRecordSelect={this._handleRecordSelect} navigation={this.props.navigation} key={index} record={item} />
+                    <RecordComponent _handleDeleteRecord={this._handleDeleteRecord} _handleRecordSelect={this._handleRecordSelect} navigation={this.props.navigation} key={index} record={item} />
                 }
                 scrollEventThrottle={0}
                 onScroll={Animated.event(
