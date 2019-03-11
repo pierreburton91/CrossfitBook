@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, Animated } from 'react-native';
+import { View, FlatList, Animated, Alert } from 'react-native';
 import { LinearGradient } from 'expo';
 import styles from '../../shared-styles/styles.js';
 import FAB from '../../shared-components/fab.js';
@@ -34,10 +34,15 @@ export default class RecordsScreen extends React.Component {
     }
 
     _handleDeleteRecord(record) {
+        Alert.alert('Confirmer la suppression', 'Cette action supprimera l\'enregistrement, ainsi que tout l\'historique.', [{text: 'Confirmer', onPress: () => this._deleteRecord(record)}, {text: 'Annuler', style: 'cancel'}], {cancelable: true});
+    }
+
+    _deleteRecord(record) {
         const index = this.state.dataStub.indexOf(record);
         const temp = this.state.dataStub.slice();
         temp.splice(index, 1);
-        this.setState({dataStub: temp, scrollY: new Animated.Value(0)});
+        this.setState({dataStub: temp});
+        this.state.scrollY.setValue(0);
     }
 
     render() {
