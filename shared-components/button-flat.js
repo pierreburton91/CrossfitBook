@@ -5,13 +5,13 @@ export default class ButtonFlat extends React.Component {
     render() {
         let button;
         if (Platform.OS === 'ios') {
-            button = <TouchableHighlight onPress={() => console.log('Pressed')} >
+            button = <TouchableHighlight onPress={() => this.props.action(this.props.arguments)} >
                         <View style={[styles.button, this.props.style]}>
                             <Text style={styles.label}>{this.props.label}</Text>
                         </View>
                         </TouchableHighlight>
         } else {
-            button = <TouchableNativeFeedback onPress={() => console.log('Pressed')} background={TouchableNativeFeedback.Ripple('rgba(255,255,255,.25)')} > 
+            button = <TouchableNativeFeedback onPress={() => this.props.action(this.props.arguments)} background={TouchableNativeFeedback.Ripple('rgba(255,255,255,.25)')} > 
                         <View style={[styles.button, this.props.style]}>
                             <Text style={styles.label}>{this.props.label}</Text>
                         </View>

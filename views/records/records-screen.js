@@ -5,6 +5,7 @@ import styles from '../../shared-styles/styles.js';
 import FAB from '../../shared-components/fab.js';
 import HeaderHero from '../../shared-components/header.js';
 import RecordComponent from './components/record-component.js';
+import AddRecordCommand from '../../commands/add-record-command.js';
 
 export default class RecordsScreen extends React.Component {
     constructor(props) {
@@ -45,6 +46,10 @@ export default class RecordsScreen extends React.Component {
         this.state.scrollY.setValue(0);
     }
 
+    _handleNewRecord() {
+        this.props.navigation.navigate('AddRecord_newType', {command: new AddRecordCommand()});
+    }
+
     render() {
         const recordsList = this.state.dataStub.slice();
         const headerHeight = this.state.scrollY.interpolate({
@@ -78,7 +83,7 @@ export default class RecordsScreen extends React.Component {
             />
             <AnimatedHeaderHero title={"Personal records"} banner={'records'} height={headerHeight} blur={headerBlur} />
             <LinearGradient start={[.5, 0]} end={[.5, 1]} colors={['transparent', 'rgba(0,0,0,.16)']} style={styles.tabBarShadow}></LinearGradient>
-            <FAB onPress={() => {console.log('FAB Pressed on Records!')}} />
+            <FAB onPress={() => { this._handleNewRecord() }} />
         </View>
         );
     }

@@ -1,11 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, SectionList } from 'react-native';
+import { LinearGradient } from 'expo';
 import styles from '../../shared-styles/styles.js';
 import FAB from '../../shared-components/fab.js';
 import DetailsHeader from '../../shared-components/details-header.js';
 import ButtonIcon from '../../shared-components/button-icon.js';
 
-export default class RecordDetailsScreen extends React.Component {
+export default class AddRecordValues extends React.Component {
     
     _handleCloseAction(navigation) {
         navigation.goBack();
@@ -45,6 +46,7 @@ export default class RecordDetailsScreen extends React.Component {
                 renderSectionHeader={({section: {title}}) => <Text style={[styles.textYellow, componentStyles.previousScoreHeader]}>{title}</Text>}
                 keyExtractor={(item, index) => item + index}
             />
+            <LinearGradient start={[.5, 0]} end={[.5, 1]} colors={['transparent', 'rgba(0,0,0,.16)']} style={styles.tabBarShadow}></LinearGradient>
             <FAB onPress={() => {console.log('FAB Pressed on Record details!')}} />
         </View>
         );
