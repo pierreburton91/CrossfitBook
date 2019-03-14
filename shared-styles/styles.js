@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import colors from './colors';
 
 export default styles = StyleSheet.create({
     container: {
@@ -7,13 +8,13 @@ export default styles = StyleSheet.create({
         marginBottom: -8
     },
     text : {
-        color: '#ffffff'
+        color: colors.white
     },
     textYellow: {
-        color: '#EEFF41'
+        color: colors.accent
     },
     textMuted: {
-        color: 'rgba(255,255,255,.54)'
+        color: colors.muted
     },
     tabBarShadow: {
         position: 'absolute',
@@ -22,5 +23,17 @@ export default styles = StyleSheet.create({
         height: 8,
         width: '100%',
         backgroundColor: 'transparent'
+    },
+    textInput: {
+      paddingBottom: 8,
+      paddingTop: 8,
+    //   paddingLeft: 4,
+    //   paddingRight: 4,
+      color: colors.white,
+      marginBottom: 16,
+      marginLeft: 16,
+      marginRight: 16,
+      fontSize: 14,
+      backgroundColor: colors.muted
     }
 });

@@ -35,7 +35,7 @@ export default class RecordsScreen extends React.Component {
     }
 
     _handleDeleteRecord(record) {
-        Alert.alert('Confirmer la suppression', 'Cette action supprimera l\'enregistrement, ainsi que tout l\'historique.', [{text: 'Confirmer', onPress: () => this._deleteRecord(record)}, {text: 'Annuler', style: 'cancel'}], {cancelable: true});
+        Alert.alert('Confirm deletion', 'This action will delete the record and all historical data associated.\nIt can\'t be undone.', [{text: 'Confirm', onPress: () => this._deleteRecord(record)}, {text: 'Cancel', style: 'cancel'}], {cancelable: true});
     }
 
     _deleteRecord(record) {
