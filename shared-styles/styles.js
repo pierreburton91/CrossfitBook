@@ -27,13 +27,13 @@ export default styles = StyleSheet.create({
     textInput: {
       paddingBottom: 8,
       paddingTop: 8,
-    //   paddingLeft: 4,
-    //   paddingRight: 4,
+      paddingLeft: 4,
+      paddingRight: 4,
       color: colors.white,
       marginBottom: 16,
       marginLeft: 16,
       marginRight: 16,
       fontSize: 14,
-      backgroundColor: colors.muted
-    }
+    //   backgroundColor: colors.muted
+    },
 });

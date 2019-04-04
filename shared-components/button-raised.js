@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, TouchableNativeFeedback, Platform } from 'react-native';
 import colors from '../shared-styles/colors';
 
-export default class ButtonFlat extends React.Component {
-    
+export default class ButtonRaised extends React.Component {
+
     _actionHandler(argument) {
         if(argument == undefined) {
             this.props.action();
@@ -35,20 +35,23 @@ export default class ButtonFlat extends React.Component {
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: 'transparent',
-        alignItems: 'center'
+        backgroundColor: colors.accent,
+        borderRadius: 2,
+        elevation: 4,
+        alignItems: 'center',
+        height: 36
+    },
+    disabled: {
+        backgroundColor: '#cccccc'
     },
     label: {
         fontSize: 14,
         fontWeight: '500',
-        color: colors.accent,
+        color: colors.dark,
         textTransform: 'uppercase',
         marginStart: 16,
         marginEnd: 16,
         marginTop: 8,
         marginBottom: 8
-    },
-    disabled: {
-        color: '#cccccc'
-    },
+    }
 });
