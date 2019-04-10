@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, SectionList, Platform, TouchableHighlight, TouchableNativeFeedback } from 'react-native';
 import styles from '../../shared-styles/styles.js';
 import DetailsHeader from '../../shared-components/details-header.js';
+import MovesData from '../../static/moves-data.js';
 
 export default class AddRecordType extends React.Component {
     
@@ -11,13 +12,13 @@ export default class AddRecordType extends React.Component {
 
     _renderListItem(item, index) {
         if (Platform.OS === 'ios') {
-            return <TouchableHighlight onPress={() => this._handleTypeSelect(item.name)} background='transparent'>
+            return <TouchableHighlight onPress={() => this._handleTypeSelect(item)} background='transparent'>
                 <View key={index} style={componentStyles.typeItem}>
                         <Text style={[styles.text, componentStyles.typeItemText]}>{item.name}</Text>
                     </View>
             </TouchableHighlight>
         } else {
-            return <TouchableNativeFeedback onPress={() => this._handleTypeSelect(item.name)} background={TouchableNativeFeedback.Ripple('rgba(255,255,255,.25)')}>
+            return <TouchableNativeFeedback onPress={() => this._handleTypeSelect(item)} background={TouchableNativeFeedback.Ripple('rgba(255,255,255,.25)')}>
                 <View key={index} style={componentStyles.typeItem}>
                         <Text style={[styles.text, componentStyles.typeItemText]}>{item.name}</Text>
                     </View>
@@ -25,37 +26,15 @@ export default class AddRecordType extends React.Component {
         }
     }
 
-    _handleTypeSelect(name) {
+    _handleTypeSelect(item) {
         const command = this.props.navigation.getParam('command', {});
-        command.title = name;
+        command.title = item.name;
+        command.valuesTypesKey = item.valuesTypesKey;
         this.props.navigation.navigate('AddRecord_newDesc', {command: command});
     }
 
     render() {
-        const dataStub = [
-            {
-                title: 'Weightlifting', 
-                data: [
-                    {name: 'Deadlift'},
-                    {name: 'Deadlift'},
-                    {name: 'Deadlift'},
-                    {name: 'Deadlift'},
-                    {name: 'Deadlift'},
-                    {name: 'Deadlift'},
-                ]
-            },
-            {
-                title: 'Weightlifting', 
-                data: [
-                    {name: 'Deadlift'},
-                    {name: 'Deadlift'},
-                    {name: 'Deadlift'},
-                    {name: 'Deadlift'},
-                    {name: 'Deadlift'},
-                    {name: 'Deadlift'},
-                ]
-            }
-        ];
+        const dataStub = MovesData;
 
         return (
         <View style={styles.container}>

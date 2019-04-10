@@ -35,5 +35,5 @@ export default styles = StyleSheet.create({
       marginRight: 16,
       fontSize: 14,
     //   backgroundColor: colors.muted
-    },
+    }
 });

@@ -5,7 +5,7 @@ import colors from '../shared-styles/colors';
 export default class ButtonRaised extends React.Component {
 
     _actionHandler(argument) {
-        if(argument == undefined) {
+        if (argument == undefined) {
             this.props.action();
         } else {
             this.props.action(argument);
@@ -15,17 +15,17 @@ export default class ButtonRaised extends React.Component {
     render() {
         let button;
         if (Platform.OS === 'ios') {
-            button = <TouchableHighlight onPress={() => {if(!this.props.disabled) {this._actionHandler(this.props.arguments)}}} >
-                        <View style={[styles.button, this.props.style, this.props.disabled ? styles.disabled : '']}>
-                            <Text style={styles.label}>{this.props.label}</Text>
-                        </View>
-                        </TouchableHighlight>
+            button = <TouchableHighlight onPress={() => { if (!this.props.disabled) { this._actionHandler(this.props.arguments) } }} >
+                <View style={[styles.button, this.props.style, this.props.disabled ? styles.disabled : '']}>
+                    <Text style={styles.label}>{this.props.label}</Text>
+                </View>
+            </TouchableHighlight>
         } else {
-            button = <TouchableNativeFeedback onPress={() => {if(!this.props.disabled) {this._actionHandler(this.props.arguments)}}} background={(!this.props.disabled) ? TouchableNativeFeedback.Ripple('rgba(0,0,0,.25)') : TouchableNativeFeedback.Ripple('transparent')} > 
-                        <View style={[styles.button, this.props.style, this.props.disabled ? styles.disabled : '']}>
-                            <Text style={styles.label}>{this.props.label}</Text>
-                        </View>
-                        </TouchableNativeFeedback>
+            button = <TouchableNativeFeedback onPress={() => { if (!this.props.disabled) { this._actionHandler(this.props.arguments) } }} background={(!this.props.disabled) ? TouchableNativeFeedback.Ripple('rgba(0,0,0,.25)') : TouchableNativeFeedback.Ripple('transparent')} >
+                <View style={[styles.button, this.props.style, this.props.disabled ? styles.disabled : '']}>
+                    <Text style={styles.label}>{this.props.label}</Text>
+                </View>
+            </TouchableNativeFeedback>
         }
         return (
             button

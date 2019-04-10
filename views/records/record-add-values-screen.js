@@ -1,61 +1,91 @@
 import React from 'react';
-import { View, Text, StyleSheet, Alert, TextInput, Platform, TouchableHighlight, TouchableNativeFeedback } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Alert, TextInput, findNodeHandle, Keyboard } from 'react-native';
 import styles from '../../shared-styles/styles.js';
 import DetailsHeader from '../../shared-components/details-header.js';
 import ButtonRaised from '../../shared-components/button-raised.js';
 import colors from '../../shared-styles/colors.js';
+import { RadioGroup } from 'react-native-btr';
+import MovesValuesTypesEnum from '../../static/moves-values-types-enum.js';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default class AddRecordValues extends React.Component {
-    
+
     constructor(props) {
         super(props);
 
         this.state = {
+            radioButtons: MovesValuesTypesEnum(this.props.navigation.getParam('command').valuesTypesKey),
             isFieldValid: false,
-            fieldValue: ''
+            radioValue: null,
+            fieldValue: '',
+            time: '000000',
+            timeDisplay: '00:00:00',
+            paddingKeyboard: 0
         };
 
         this._handleCancelAction = this._handleCancelAction.bind(this);
         this._handleValidateAction = this._handleValidateAction.bind(this);
+        this._handleRadioPress = this._handleRadioPress.bind(this);
+        this._scrollToInput = this._scrollToInput.bind(this);
+        this._keyboardDidShow = this._keyboardDidShow.bind(this);
+        this._keyboardDidHide = this._keyboardDidHide.bind(this);
     }
 
-    _renderSuggestions() {
-        const suggestions = ['1 RM', '3 RM', 'Max effort'];
-        const views = [];
-        suggestions.forEach((suggestion, index) => {
-            let view;
-            if (Platform.OS === 'ios') {
-                view = <TouchableHighlight key={index} onPress={() => this._handleSuggestionSelect(suggestion)} >
-                            <View style={componentStyles.suggestionBox}>
-                                <Text style={componentStyles.suggestionText}>{suggestion}</Text>
-                            </View>
-                            </TouchableHighlight>
-            } else {
-                view = <TouchableNativeFeedback key={index} onPress={() => this._handleSuggestionSelect(suggestion)} background={TouchableNativeFeedback.Ripple('rgba(255,255,255,.25)')} > 
-                            <View style={componentStyles.suggestionBox}>
-                                <Text style={componentStyles.suggestionText}>{suggestion}</Text>
-                            </View>
-                            </TouchableNativeFeedback>
-            }
-            views.push(view);
-        })
-        return views;
+    componentDidMount() {
+        this.keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            this._keyboardDidShow,
+        );
+        this.keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            this._keyboardDidHide,
+        );
     }
+
+    componentWillUnmount() {
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
+    }
+
+    _keyboardDidShow(e) {
+        const keyboardHeight = e.endCoordinates.height;
+        this.setState({paddingKeyboard: keyboardHeight});
+        // this._scrollView.scrollTo({y: keyboardHeight + 76, animated: true});
+    }
+
+    _keyboardDidHide() {
+        this.setState({paddingKeyboard: 0});
+    }
+
+    _scrollToInput (reactNode) {
+        this.scroll.props.scrollToFocusedInput(reactNode)
+      }
 
     _handleCancelAction() {
-        Alert.alert('Cancel new record', 'All your modifications will be lost.', [{text: 'Confirm', onPress: () => this._cancelAddNew()}, {text: 'My bad!', style: 'cancel'}], {cancelable: true});
+        Alert.alert('Cancel new record', 'All your modifications will be lost.', [{ text: 'Confirm', onPress: () => this._cancelAddNew() }, { text: 'My bad!', style: 'cancel' }], { cancelable: true });
     }
 
     _cancelAddNew() {
         this.props.navigation.navigate('Main');
     }
 
-    _handleInput(text) {
-        this._updateField(text);
+    _handleRadioPress(radioButtons) {
+        this.setState({ radioButtons });
+        this.setState({ radioValue: this.state.radioButtons.find(e => e.checked == true) });
     }
 
-    _handleSuggestionSelect(suggestionText) {
-        this._updateField(suggestionText);
+    _handleInput(text) {
+        if (text.length > 9 || text.length < 8) {
+            return;
+        }
+        if (text.match(/[A-z]|[!@#$%^&*(),.?"{}|<>-\s]/)) {
+            return;
+        }
+        
+        let newTime = this.state.time.slice(1) + text.slice(8);
+        newTimeDisplay = newTime.substring(0, 2) + ':' + newTime.substring(2, 4) + ':' + newTime.substring(4);
+        this.setState({ time: newTime, timeDisplay: newTimeDisplay });
+        this._updateField(newTimeDisplay);
     }
 
     _updateField(text) {
@@ -63,19 +93,63 @@ export default class AddRecordValues extends React.Component {
     }
 
     _handleValidateAction() {
-        // const command = this.props.navigation.getParam('command', {});
-        // command.text = this.state.fieldValue;
 
-        // this.props.navigation.navigate('AddRecord_newValues', {command: command});
     }
 
     render() {
         const recordType = `${this.props.navigation.getParam('command', {}).title} - ${this.props.navigation.getParam('command', {}).text}`;
+        const showRemainingInputs = this.state.radioValue != null ? true : false;
         return (
-            <View style={styles.container}>
-                <DetailsHeader action={this._handleCancelAction} title={'New record'} subTitle={recordType} isForm={true} label={'CANCEL'} />
-                <Text style={[styles.textYellow, componentStyles.inputTitle]}>Record type</Text>
-                <ButtonRaised style={{margin: 16}} action={this._handleValidateAction} disabled={!this.state.isFieldValid} label='NEXT' />  
+            <View style={[styles.container, {paddingBottom: this.state.paddingKeyboard}]}>
+                <KeyboardAwareScrollView innerRef={ref => {
+    this.scroll = ref
+  }}>
+                    <DetailsHeader action={this._handleCancelAction} title={'New record'} subTitle={recordType} isForm={true} label={'CANCEL'} />
+                    <Text style={[styles.textYellow, componentStyles.inputTitle]}>Record type</Text>
+                    <View style={{ flexShrink: 1 }}>
+                        <RadioGroup labelStyle={styles.text} style={{ margin: 16 }} color={colors.accent} radioButtons={this.state.radioButtons} onPress={this._handleRadioPress} />
+                    </View>
+                    <View style={{ display: showRemainingInputs ? 'flex' : 'none' }}>
+                        <Text style={[styles.textYellow, componentStyles.inputTitle]}>Your score</Text>
+                        <TextInput onFocus={(event) => {
+        // `bind` the function if you're using ES6 classes
+        this._scrollToInput(findNodeHandle(event.target))
+      }} keyboardType='number-pad' returnKeyType='done' maxLength={9} style={styles.textInput} value={this.state.timeDisplay} placeholder='00:00:00' underlineColorAndroid={colors.accent} clearButtonMode='while-editing' keyboardAppearance='dark' onChangeText={(e) => this._handleInput(e)} />
+                        <ButtonRaised style={{ margin: 16 }} action={this._handleValidateAction} disabled={!this.state.isFieldValid} label='VALIDATE' />
+                    </View>
+                    <View style={{ display: showRemainingInputs ? 'flex' : 'none' }}>
+                        <Text style={[styles.textYellow, componentStyles.inputTitle]}>1</Text>
+                        <TextInput onFocus={(event) => {
+        // `bind` the function if you're using ES6 classes
+        this._scrollToInput(findNodeHandle(event.target))
+      }} keyboardType='number-pad' returnKeyType='done' maxLength={9} style={styles.textInput} value={this.state.timeDisplay} placeholder='00:00:00' underlineColorAndroid={colors.accent} clearButtonMode='while-editing' keyboardAppearance='dark' onChangeText={(e) => this._handleInput(e)} />
+                        <ButtonRaised style={{ margin: 16 }} action={this._handleValidateAction} disabled={!this.state.isFieldValid} label='VALIDATE' />
+                    </View>
+                    <View style={{ display: showRemainingInputs ? 'flex' : 'none' }}>
+                        <Text style={[styles.textYellow, componentStyles.inputTitle]}>Y2</Text>
+                        <TextInput onFocus={(event) => {
+        // `bind` the function if you're using ES6 classes
+        this._scrollToInput(findNodeHandle(event.target))
+      }} keyboardType='number-pad' returnKeyType='done' maxLength={9} style={styles.textInput} value={this.state.timeDisplay} placeholder='00:00:00' underlineColorAndroid={colors.accent} clearButtonMode='while-editing' keyboardAppearance='dark' onChangeText={(e) => this._handleInput(e)} />
+                        <ButtonRaised style={{ margin: 16 }} action={this._handleValidateAction} disabled={!this.state.isFieldValid} label='VALIDATE' />
+                    </View>
+                    <View style={{ display: showRemainingInputs ? 'flex' : 'none' }}>
+                        <Text style={[styles.textYellow, componentStyles.inputTitle]}>3</Text>
+                        <TextInput onFocus={(event) => {
+        // `bind` the function if you're using ES6 classes
+        this._scrollToInput(findNodeHandle(event.target))
+      }} keyboardType='number-pad' returnKeyType='done' maxLength={9} style={styles.textInput} value={this.state.timeDisplay} placeholder='00:00:00' underlineColorAndroid={colors.accent} clearButtonMode='while-editing' keyboardAppearance='dark' onChangeText={(e) => this._handleInput(e)} />
+                        <ButtonRaised style={{ margin: 16 }} action={this._handleValidateAction} disabled={!this.state.isFieldValid} label='VALIDATE' />
+                    </View>
+                    <View style={{ display: showRemainingInputs ? 'flex' : 'none' }}>
+                        <Text style={[styles.textYellow, componentStyles.inputTitle]}>4</Text>
+                        <TextInput onFocus={(event) => {
+        // `bind` the function if you're using ES6 classes
+        this._scrollToInput(findNodeHandle(event.target))
+      }} keyboardType='number-pad' returnKeyType='done' maxLength={9} style={styles.textInput} value={this.state.timeDisplay} placeholder='00:00:00' underlineColorAndroid={colors.accent} clearButtonMode='while-editing' keyboardAppearance='dark' onChangeText={(e) => this._handleInput(e)} />
+                        <ButtonRaised style={{ margin: 16 }} action={this._handleValidateAction} disabled={!this.state.isFieldValid} label='VALIDATE' />
+                    </View>
+                </KeyboardAwareScrollView>
             </View>
         );
     }
@@ -83,33 +157,8 @@ export default class AddRecordValues extends React.Component {
 
 const componentStyles = StyleSheet.create({
     inputTitle: {
-        // fontSize: 20,
         fontWeight: '500',
         marginLeft: 16,
         marginTop: 32
-    },
-    label: {
-        marginLeft: 16,
-        marginRight: 16,
-        marginBottom: 8
-    },
-    suggestionsContainer: {
-        marginLeft: 16,
-        marginRight: 16,
-        marginBottom: 16,
-        flexDirection: 'row'
-    },
-    suggestionBox: {
-        borderRadius: 50,
-        backgroundColor: '#6709B3',
-        paddingTop: 4,
-        paddingBottom: 4,
-        paddingLeft: 8,
-        paddingRight: 8,
-        marginRight: 8,
-        flexShrink: 1
-    },
-    suggestionText: {
-        color: '#ffffff'
     }
 });
