@@ -4,25 +4,44 @@ import styles from '../../shared-styles/styles.js';
 import FAB from '../../shared-components/fab.js';
 import DetailsHeader from '../../shared-components/details-header.js';
 import ButtonIcon from '../../shared-components/button-icon.js';
+import AddRecordCommand from '../../commands/add-record-command.js';
 
 export default class RecordDetailsScreen extends React.Component {
-    
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            record: this.props.navigation.getParam('record', {})
+        }
+
+        this._handleAddNewRecord = this._handleAddNewRecord.bind(this);
+    }
+
     _handleCloseAction(navigation) {
         navigation.goBack();
     }
+
+    _handleAddNewRecord() {
+        const command = new AddRecordCommand();
+        command.title = this.state.record.title;
+        command.text = this.state.record.text;
+        command.valuesTypesKey = this.state.record.valuesTypesKey;
+        command.unit = this.state.record.value.split(' ')[1];
+        this.props.navigation.navigate('AddRecord_newValues', {command: command});
+    }
     
     render() {
-        const record = this.props.navigation.getParam('record', {});
+        const record = this.state.record;
         const dataStub = [
             {
                 title: 'Previous records', 
                 data: [
-                    {date: '02/01/2018', score: '120kg'},
-                    {date: '02/01/2018', score: '120kg'},
-                    {date: '02/01/2018', score: '120kg'},
-                    {date: '02/01/2018', score: '120kg'},
-                    {date: '02/01/2018', score: '120kg'},
-                    {date: '02/01/2018', score: '120kg'},
+                    {date: '02/01/2018', score: '120 kg'},
+                    {date: '02/01/2018', score: '120 kg'},
+                    {date: '02/01/2018', score: '120 kg'},
+                    {date: '02/01/2018', score: '120 kg'},
+                    {date: '02/01/2018', score: '120 kg'},
+                    {date: '02/01/2018', score: '120 kg'},
                 ]
         }]
         return (
@@ -45,7 +64,7 @@ export default class RecordDetailsScreen extends React.Component {
                 renderSectionHeader={({section: {title}}) => <Text style={[styles.textYellow, componentStyles.previousScoreHeader]}>{title}</Text>}
                 keyExtractor={(item, index) => item + index}
             />
-            <FAB onPress={() => {console.log('FAB Pressed on Record details!')}} />
+            <FAB onPress={() => this._handleAddNewRecord(record)} />
         </View>
         );
     }

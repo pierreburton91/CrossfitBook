@@ -4,6 +4,7 @@ export default class AddRecordCommand {
         this.valuesTypesKey = null;
         this.text = null;
         this.value = null;
+        this.unit = null;
         this.date = null;
     }
 }

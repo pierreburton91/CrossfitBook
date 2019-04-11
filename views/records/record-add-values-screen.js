@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Text, StyleSheet, Alert, TextInput, findNodeHandle, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, Alert, TextInput, findNodeHandle, Keyboard } from 'react-native';
 import styles from '../../shared-styles/styles.js';
 import DetailsHeader from '../../shared-components/details-header.js';
 import ButtonRaised from '../../shared-components/button-raised.js';
@@ -7,6 +7,7 @@ import colors from '../../shared-styles/colors.js';
 import { RadioGroup } from 'react-native-btr';
 import MovesValuesTypesEnum from '../../static/moves-values-types-enum.js';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import DatePicker from 'react-native-datepicker';
 
 export default class AddRecordValues extends React.Component {
 
@@ -20,6 +21,7 @@ export default class AddRecordValues extends React.Component {
             fieldValue: '',
             time: '000000',
             timeDisplay: '00:00:00',
+            date: new Date(),
             paddingKeyboard: 0
         };
 
@@ -29,9 +31,20 @@ export default class AddRecordValues extends React.Component {
         this._scrollToInput = this._scrollToInput.bind(this);
         this._keyboardDidShow = this._keyboardDidShow.bind(this);
         this._keyboardDidHide = this._keyboardDidHide.bind(this);
+
+        const command = this.props.navigation.getParam('command', {});
+        if (command.unit != null) {
+            const radioButtonsTemp = JSON.parse(JSON.stringify(this.state.radioButtons));
+            const radioToSelect = this.state.radioButtons.indexOf(this.state.radioButtons.find(e => e.value == command.unit));
+            radioButtonsTemp[radioToSelect].checked = true;
+            this.state.radioButtons = [radioButtonsTemp[radioToSelect]];
+        }
     }
 
     componentDidMount() {
+        if (this.state.radioButtons.find(e => e.checked == true)) {
+            this._handleRadioPress(this.state.radioButtons);
+        }
         this.keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
             this._keyboardDidShow,
@@ -49,17 +62,32 @@ export default class AddRecordValues extends React.Component {
 
     _keyboardDidShow(e) {
         const keyboardHeight = e.endCoordinates.height;
-        this.setState({paddingKeyboard: keyboardHeight});
-        // this._scrollView.scrollTo({y: keyboardHeight + 76, animated: true});
+        this.setState({ paddingKeyboard: keyboardHeight });
     }
 
     _keyboardDidHide() {
-        this.setState({paddingKeyboard: 0});
+        this.setState({ paddingKeyboard: 0 });
     }
 
-    _scrollToInput (reactNode) {
+    _scrollToInput(reactNode) {
         this.scroll.props.scrollToFocusedInput(reactNode)
-      }
+    }
+
+    _renderRecordInput() {
+        const recordType = this.state.radioValue != null ? this.state.radioValue.label : '';
+        let input;
+        if (recordType == "Time") {
+            input = <TextInput onFocus={(event) => {
+                this._scrollToInput(findNodeHandle(event.target))
+            }} keyboardType='number-pad' returnKeyType='done' maxLength={9} style={styles.textInput} value={this.state.timeDisplay} placeholder='00:00:00' underlineColorAndroid={colors.accent} clearButtonMode='while-editing' keyboardAppearance='dark' onChangeText={(e) => this._handleTimeInput(e)} />
+        }
+        else {
+            input = <TextInput onFocus={(event) => {
+                this._scrollToInput(findNodeHandle(event.target))
+            }} keyboardType='number-pad' returnKeyType='done' style={styles.textInput} value={this.state.fieldValue} placeholder='0' underlineColorAndroid={colors.accent} clearButtonMode='while-editing' keyboardAppearance='dark' onChangeText={(e) => this._handleInput(e)} />
+        }
+        return input;
+    }
 
     _handleCancelAction() {
         Alert.alert('Cancel new record', 'All your modifications will be lost.', [{ text: 'Confirm', onPress: () => this._cancelAddNew() }, { text: 'My bad!', style: 'cancel' }], { cancelable: true });
@@ -71,21 +99,29 @@ export default class AddRecordValues extends React.Component {
 
     _handleRadioPress(radioButtons) {
         this.setState({ radioButtons });
-        this.setState({ radioValue: this.state.radioButtons.find(e => e.checked == true) });
+        this.setState({ radioValue: this.state.radioButtons.find(e => e.checked == true), time: '000000', timeDisplay: '00:00:00' });
+        this._updateField('');
     }
 
-    _handleInput(text) {
+    _handleTimeInput(text) {
         if (text.length > 9 || text.length < 8) {
             return;
         }
         if (text.match(/[A-z]|[!@#$%^&*(),.?"{}|<>-\s]/)) {
             return;
         }
-        
+
         let newTime = this.state.time.slice(1) + text.slice(8);
         newTimeDisplay = newTime.substring(0, 2) + ':' + newTime.substring(2, 4) + ':' + newTime.substring(4);
         this.setState({ time: newTime, timeDisplay: newTimeDisplay });
         this._updateField(newTimeDisplay);
+    }
+
+    _handleInput(text) {
+        if (text.match(/[A-z]|[!@#$%^&*(),?"{}|<>-\s]/)) {
+            return;
+        }
+        this._updateField(text);
     }
 
     _updateField(text) {
@@ -93,60 +129,45 @@ export default class AddRecordValues extends React.Component {
     }
 
     _handleValidateAction() {
-
+        const command = this.props.navigation.getParam('command', {});
+        command.value = this.state.fieldValue;
+        command.unit = this.state.radioValue.value;
+        command.date = new Date(this.state.date);
+        console.log(command);
+        this.props.navigation.navigate('Main');
     }
 
     render() {
+        console.log(this.state.radioButtons);
         const recordType = `${this.props.navigation.getParam('command', {}).title} - ${this.props.navigation.getParam('command', {}).text}`;
         const showRemainingInputs = this.state.radioValue != null ? true : false;
+        const unit = this.state.radioValue != null ? this.state.radioValue.value : '';
         return (
-            <View style={[styles.container, {paddingBottom: this.state.paddingKeyboard}]}>
+            <View style={[styles.container, { paddingBottom: this.state.paddingKeyboard }]}>
                 <KeyboardAwareScrollView innerRef={ref => {
-    this.scroll = ref
-  }}>
+                    this.scroll = ref
+                }}>
                     <DetailsHeader action={this._handleCancelAction} title={'New record'} subTitle={recordType} isForm={true} label={'CANCEL'} />
                     <Text style={[styles.textYellow, componentStyles.inputTitle]}>Record type</Text>
                     <View style={{ flexShrink: 1 }}>
                         <RadioGroup labelStyle={styles.text} style={{ margin: 16 }} color={colors.accent} radioButtons={this.state.radioButtons} onPress={this._handleRadioPress} />
                     </View>
                     <View style={{ display: showRemainingInputs ? 'flex' : 'none' }}>
-                        <Text style={[styles.textYellow, componentStyles.inputTitle]}>Your score</Text>
-                        <TextInput onFocus={(event) => {
-        // `bind` the function if you're using ES6 classes
-        this._scrollToInput(findNodeHandle(event.target))
-      }} keyboardType='number-pad' returnKeyType='done' maxLength={9} style={styles.textInput} value={this.state.timeDisplay} placeholder='00:00:00' underlineColorAndroid={colors.accent} clearButtonMode='while-editing' keyboardAppearance='dark' onChangeText={(e) => this._handleInput(e)} />
-                        <ButtonRaised style={{ margin: 16 }} action={this._handleValidateAction} disabled={!this.state.isFieldValid} label='VALIDATE' />
-                    </View>
-                    <View style={{ display: showRemainingInputs ? 'flex' : 'none' }}>
-                        <Text style={[styles.textYellow, componentStyles.inputTitle]}>1</Text>
-                        <TextInput onFocus={(event) => {
-        // `bind` the function if you're using ES6 classes
-        this._scrollToInput(findNodeHandle(event.target))
-      }} keyboardType='number-pad' returnKeyType='done' maxLength={9} style={styles.textInput} value={this.state.timeDisplay} placeholder='00:00:00' underlineColorAndroid={colors.accent} clearButtonMode='while-editing' keyboardAppearance='dark' onChangeText={(e) => this._handleInput(e)} />
-                        <ButtonRaised style={{ margin: 16 }} action={this._handleValidateAction} disabled={!this.state.isFieldValid} label='VALIDATE' />
-                    </View>
-                    <View style={{ display: showRemainingInputs ? 'flex' : 'none' }}>
-                        <Text style={[styles.textYellow, componentStyles.inputTitle]}>Y2</Text>
-                        <TextInput onFocus={(event) => {
-        // `bind` the function if you're using ES6 classes
-        this._scrollToInput(findNodeHandle(event.target))
-      }} keyboardType='number-pad' returnKeyType='done' maxLength={9} style={styles.textInput} value={this.state.timeDisplay} placeholder='00:00:00' underlineColorAndroid={colors.accent} clearButtonMode='while-editing' keyboardAppearance='dark' onChangeText={(e) => this._handleInput(e)} />
-                        <ButtonRaised style={{ margin: 16 }} action={this._handleValidateAction} disabled={!this.state.isFieldValid} label='VALIDATE' />
-                    </View>
-                    <View style={{ display: showRemainingInputs ? 'flex' : 'none' }}>
-                        <Text style={[styles.textYellow, componentStyles.inputTitle]}>3</Text>
-                        <TextInput onFocus={(event) => {
-        // `bind` the function if you're using ES6 classes
-        this._scrollToInput(findNodeHandle(event.target))
-      }} keyboardType='number-pad' returnKeyType='done' maxLength={9} style={styles.textInput} value={this.state.timeDisplay} placeholder='00:00:00' underlineColorAndroid={colors.accent} clearButtonMode='while-editing' keyboardAppearance='dark' onChangeText={(e) => this._handleInput(e)} />
-                        <ButtonRaised style={{ margin: 16 }} action={this._handleValidateAction} disabled={!this.state.isFieldValid} label='VALIDATE' />
-                    </View>
-                    <View style={{ display: showRemainingInputs ? 'flex' : 'none' }}>
-                        <Text style={[styles.textYellow, componentStyles.inputTitle]}>4</Text>
-                        <TextInput onFocus={(event) => {
-        // `bind` the function if you're using ES6 classes
-        this._scrollToInput(findNodeHandle(event.target))
-      }} keyboardType='number-pad' returnKeyType='done' maxLength={9} style={styles.textInput} value={this.state.timeDisplay} placeholder='00:00:00' underlineColorAndroid={colors.accent} clearButtonMode='while-editing' keyboardAppearance='dark' onChangeText={(e) => this._handleInput(e)} />
+                        <View style={componentStyles.unitInputLabel}>
+                            <Text style={[styles.textYellow, componentStyles.inputTitle]}>Your score</Text>
+                            <Text style={[styles.textMuted, componentStyles.unit]}>{unit}</Text>
+                        </View>
+                        {this._renderRecordInput()}
+                        <Text style={[styles.textYellow, componentStyles.inputTitle]}>Achieving date</Text>
+                        <DatePicker
+                            date={this.state.date}
+                            mode="date"
+                            format="DD-MM-YYYY"
+                            confirmBtnText="Confirm"
+                            cancelBtnText="Cancel"
+                            customStyles={{dateTouch: { width: 'auto' }, dateTouchBody: { marginLeft: 16, justifyContent: 'flex-start', alignItems: 'flex-start', height: 'auto'}, dateIcon: { display: 'none'}, dateInput: { flex: 0, borderWidth: 0, height: 'auto', paddingTop: 16, paddingBottom: 16}, dateText: { color: '#fff' }}}
+                            onDateChange={(date) => { this.setState({ date: date }) }}
+                        />
                         <ButtonRaised style={{ margin: 16 }} action={this._handleValidateAction} disabled={!this.state.isFieldValid} label='VALIDATE' />
                     </View>
                 </KeyboardAwareScrollView>
@@ -156,9 +177,18 @@ export default class AddRecordValues extends React.Component {
 }
 
 const componentStyles = StyleSheet.create({
+    unitInputLabel: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
     inputTitle: {
         fontWeight: '500',
         marginLeft: 16,
+        marginTop: 32
+    },
+    unit: {
+        marginRight: 16,
         marginTop: 32
     }
 });

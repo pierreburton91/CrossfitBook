@@ -6,6 +6,7 @@ import FAB from '../../shared-components/fab.js';
 import HeaderHero from '../../shared-components/header.js';
 import RecordComponent from './components/record-component.js';
 import AddRecordCommand from '../../commands/add-record-command.js';
+import dataStub from '../../static/data-stub.js';
 
 export default class RecordsScreen extends React.Component {
     constructor(props) {
@@ -13,21 +14,14 @@ export default class RecordsScreen extends React.Component {
 
         this.state = {
             scrollY: new Animated.Value(0),
-            dataStub: [
-                {title: 'Hello1', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-                {title: 'Hello', text: 'My first item', value: '110 Kg', date: '01/01/2018'},
-            ]
+            data: []
         }
 
         this._handleDeleteRecord = this._handleDeleteRecord.bind(this);
+    }
+
+    componentDidMount() {
+        this.setState({ data: dataStub })
     }
     
     _handleRecordSelect(element, navigation) {
@@ -39,10 +33,10 @@ export default class RecordsScreen extends React.Component {
     }
 
     _deleteRecord(record) {
-        const index = this.state.dataStub.indexOf(record);
-        const temp = this.state.dataStub.slice();
+        const index = this.state.data.indexOf(record);
+        const temp = this.state.data.slice();
         temp.splice(index, 1);
-        this.setState({dataStub: temp});
+        this.setState({data: temp});
         this.state.scrollY.setValue(0);
     }
 
@@ -51,7 +45,7 @@ export default class RecordsScreen extends React.Component {
     }
 
     render() {
-        const recordsList = this.state.dataStub.slice();
+        const recordsList = this.state.data.slice();
         const headerHeight = this.state.scrollY.interpolate({
             inputRange: [0, 112],
             outputRange: [200, 88],
