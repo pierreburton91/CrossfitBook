@@ -30,7 +30,7 @@ export default class AddRecordType extends React.Component {
         const command = this.props.navigation.getParam('command', {});
         command.title = item.name;
         command.valuesTypesKey = item.valuesTypesKey;
-        this.props.navigation.navigate('AddRecord_newDesc', {command: command});
+        this.props.navigation.navigate('AddRecord_newValues', {command: command});
     }
 
     render() {

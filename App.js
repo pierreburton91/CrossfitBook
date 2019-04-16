@@ -4,7 +4,6 @@ import { createBottomTabNavigator, createAppContainer, createStackNavigator } fr
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import RecordDetailsScreen from './views/records/record-details-screen.js';
 import AddRecordType from './views/records/record-add-type-screen.js';
-import AddRecordDesc from './views/records/record-add-desc-screen.js';
 import AddRecordValues from './views/records/record-add-values-screen.js';
 import RecordsScreen from './views/records/records-screen.js';
 import BenchmarksScreen from './views/benchmarks/benchmarks-screen.js';
@@ -22,7 +21,6 @@ const RecordsStack = createStackNavigator({
   Main: RecordsScreen,
   Details: RecordDetailsScreen,
   AddRecord_newType: AddRecordType,
-  AddRecord_newDesc: AddRecordDesc,
   AddRecord_newValues: AddRecordValues 
 },
 {

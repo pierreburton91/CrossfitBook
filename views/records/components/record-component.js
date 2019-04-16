@@ -2,8 +2,19 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableHighlight, TouchableNativeFeedback, Platform } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Swipeout from 'react-native-swipeout';
+import AddRecordCommand from '../../../commands/add-record-command.js';
 
 export default class RecordComponent extends React.Component {
+
+    _handleAddNewRecord(record) {
+        const command = new AddRecordCommand();
+        command.title = record.title;
+        command.text = record.text;
+        command.valuesTypesKey = record.valuesTypesKey;
+        command.unit = record.value.split(' ')[1];
+        this.props.navigation.navigate('AddRecord_newValues', {command: command});
+    }
+
     render() {
         const swipeRightOptns = [
             {
@@ -17,8 +28,8 @@ export default class RecordComponent extends React.Component {
             {
                 backgroundColor: '#eeff41',
                 underlayColor: '#b8cc00',
-                onPress: () => { console.log('Edit item') },
-                component: <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} ><MaterialCommunityIcons size={28} name='square-edit-outline' color='#000000' /></View>
+                onPress: () => { this._handleAddNewRecord(this.props.record) },
+                component: <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} ><MaterialCommunityIcons size={28} name='plus' color='#000000' /></View>
             }
         ];
 
