@@ -7,6 +7,9 @@ import AddRecordType from './views/records/record-add-type-screen.js';
 import AddRecordValues from './views/records/record-add-values-screen.js';
 import RecordsScreen from './views/records/records-screen.js';
 import BenchmarksScreen from './views/benchmarks/benchmarks-screen.js';
+import BenchmarkDetailsScreen from './views/benchmarks/benchmark-details-screen.js';
+import AddBenchmarkSelect from './views/benchmarks/benchmark-select-screen.js';
+import AddBenchmarkValues from './views/benchmarks/benchmark-add-values-screen.js';
 import SettingsScreen from './views/settings/settings-screen.js';
 
 const styles = StyleSheet.create({
@@ -38,9 +41,30 @@ const RecordsStack = createStackNavigator({
   }
 });
 
+const BenchmarksStack = createStackNavigator({
+  Main: BenchmarksScreen,
+  Details: BenchmarkDetailsScreen,
+  AddBenchmark_select: AddBenchmarkSelect,
+  AddBenchmark_newValues: AddBenchmarkValues 
+},
+{
+  initialRouteName: 'Main',
+  headerMode: 'none',
+  navigationOptions: ({navigation}) => {
+    const { routeName } = navigation.state.routes[navigation.state.index];
+    let navigationOptions = {};
+
+    if (routeName !== 'Main') {
+      navigationOptions.tabBarVisible = false;
+    }
+
+    return navigationOptions;
+  }
+});
+
 const TabNavigator = createBottomTabNavigator({
   Records: RecordsStack,
-  Benchmarks: BenchmarksScreen,
+  Benchmarks: BenchmarksStack,
   Settings: SettingsScreen,
 },
 {

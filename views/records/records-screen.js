@@ -6,7 +6,8 @@ import FAB from '../../shared-components/fab.js';
 import HeaderHero from '../../shared-components/header.js';
 import RecordComponent from './components/record-component.js';
 import AddRecordCommand from '../../commands/add-record-command.js';
-import dataStub from '../../static/data-stub.js';
+import dataStub from '../../static/pr-stub.js';
+import { AdMobBanner, Constants } from 'expo';
 
 export default class RecordsScreen extends React.Component {
     constructor(props) {
@@ -14,9 +15,11 @@ export default class RecordsScreen extends React.Component {
 
         this.state = {
             scrollY: new Animated.Value(0),
-            data: []
+            data: [],
+            showAd: true
         }
 
+        this._handleRecordSelect = this._handleRecordSelect.bind(this);
         this._handleDeleteRecord = this._handleDeleteRecord.bind(this);
     }
 
@@ -24,8 +27,8 @@ export default class RecordsScreen extends React.Component {
         this.setState({ data: dataStub })
     }
     
-    _handleRecordSelect(element, navigation) {
-        navigation.navigate('Details', {record: element});
+    _handleRecordSelect(element) {
+        this.props.navigation.navigate('Details', {record: element});
     }
 
     _handleDeleteRecord(record) {
@@ -42,6 +45,24 @@ export default class RecordsScreen extends React.Component {
 
     _handleNewRecord() {
         this.props.navigation.navigate('AddRecord_newType', {command: new AddRecordCommand()});
+    }
+
+    _renderRecords(item, index) {
+        if (index%20 == 0) {
+            return (
+                <View>
+                    <View style={{ display: this.state.showAd ? 'flex' : 'none', alignItems: 'center', marginTop: 8}}>
+                        <AdMobBanner
+                            bannerSize="banner"
+                            adUnitID="ca-app-pub-3940256099942544/6300978111" // ca-app-pub-3940256099942544/6300978111
+                            testDeviceID={Constants.installationId}
+                            onDidFailToReceiveAdWithError={() => this.setState({ showAd: false })} />
+                    </View>
+                <RecordComponent _handleDeleteRecord={this._handleDeleteRecord} _handleRecordSelect={this._handleRecordSelect} key={index} record={item} />
+                </View>
+            )
+        }
+        return (<RecordComponent _handleDeleteRecord={this._handleDeleteRecord} _handleRecordSelect={this._handleRecordSelect} key={index} record={item} />)
     }
 
     render() {
@@ -67,7 +88,7 @@ export default class RecordsScreen extends React.Component {
                 contentContainerStyle={{paddingTop: 200, paddingBottom: 80}}
                 data={recordsList}
                 renderItem={({item, index}) =>
-                    <RecordComponent _handleDeleteRecord={this._handleDeleteRecord} _handleRecordSelect={this._handleRecordSelect} navigation={this.props.navigation} key={index} record={item} />
+                    this._renderRecords(item, index)
                 }
                 scrollEventThrottle={0}
                 onScroll={Animated.event(

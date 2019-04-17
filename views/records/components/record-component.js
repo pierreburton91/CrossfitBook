@@ -36,7 +36,7 @@ export default class RecordComponent extends React.Component {
         let listElement;
         if (Platform.OS === 'ios') {
             listElement = <Swipeout key={this.props.index} right={swipeRightOptns} left={swipeLeftOptns} sensitivity={25} autoClose={true} backgroundColor='transparent'>
-                            <TouchableHighlight onPress={() => this.props._handleRecordSelect(this.props.record, this.props.navigation)} scroll> 
+                            <TouchableHighlight onPress={() => this.props._handleRecordSelect(this.props.record)} scroll> 
                                 <View style={styles.recordContainer}>
                                     <View style={styles.recordDataContainer} >
                                         <View style={styles.recordTextContainer}>
@@ -50,7 +50,7 @@ export default class RecordComponent extends React.Component {
                         </Swipeout>
         } else {
             listElement =  <Swipeout key={this.props.index} right={swipeRightOptns} left={swipeLeftOptns} sensitivity={25} autoClose={true} backgroundColor='transparent'>
-                            <TouchableNativeFeedback onPress={() => this.props._handleRecordSelect(this.props.record, this.props.navigation)} background={TouchableNativeFeedback.Ripple('rgba(255,255,255,.25)')} >
+                            <TouchableNativeFeedback onPress={() => this.props._handleRecordSelect(this.props.record)} background={TouchableNativeFeedback.Ripple('rgba(255,255,255,.25)')} >
                                 <View style={styles.recordContainer}>
                                     <View style={styles.recordDataContainer} >
                                         <View style={styles.recordTextContainer}>

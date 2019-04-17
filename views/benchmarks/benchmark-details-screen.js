@@ -10,7 +10,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Menu, { MenuItem } from "react-native-material-menu";
 import { AdMobBanner, Constants } from 'expo';
 
-export default class RecordDetailsScreen extends React.Component {
+export default class BenchmarkDetailsScreen extends React.Component {
     constructor(props) {
         super(props);
 
