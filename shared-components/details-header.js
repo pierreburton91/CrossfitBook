@@ -5,7 +5,7 @@ import ButtonIcon from './button-icon.js';
 
 export default class DetailsHeader extends React.Component {
     render() {
-        const closeButton = this.props.isForm ? <ButtonFlat arguments={this.props.navigation} action={this.props.action} style={{alignSelf: 'flex-start', marginTop: 8}} label={this.props.label} /> : <ButtonIcon arguments={this.props.navigation} action={this.props.action} name='md-close' style={{alignSelf: 'flex-start', marginTop: 4, marginRight: 8}} />
+        const closeButton = this.props.isForm ? <ButtonFlat action={this.props.action} style={{alignSelf: 'flex-start', marginTop: 8}} label={this.props.label} /> : <ButtonIcon action={this.props.action} name='md-close' style={{alignSelf: 'flex-start', marginTop: 4, marginRight: 8}} />
 
         return (
             <View style={styles.header}>

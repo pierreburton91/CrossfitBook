@@ -24,13 +24,14 @@ export default class RecordDetailsScreen extends React.Component {
             ]
         }
 
+        this._handleCloseAction = this._handleCloseAction.bind(this);
         this._handleAddNewRecord = this._handleAddNewRecord.bind(this);
         this._handleDeleteRecord = this._handleDeleteRecord.bind(this);
         this._handleUpdateRecord = this._handleUpdateRecord.bind(this);
     }
 
-    _handleCloseAction(navigation) {
-        navigation.goBack();
+    _handleCloseAction() {
+        this.props.navigation.goBack();
     }
 
     _handleAddNewRecord() {
@@ -97,7 +98,7 @@ export default class RecordDetailsScreen extends React.Component {
 
         return (
             <View style={styles.container}>
-                <DetailsHeader navigation={this.props.navigation} action={this._handleCloseAction} title={record.title} subTitle={record.text} isForm={false} />
+                <DetailsHeader action={this._handleCloseAction} title={record.title} subTitle={record.text} isForm={false} />
                 <View style={componentStyles.scoreContainer}>
                     <Text style={[styles.textYellow, componentStyles.mainScore]}>{record.value}</Text>
                     <ButtonIcon name='md-more' style={{ marginRight: 8, marginTop: 4 }} />

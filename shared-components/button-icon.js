@@ -6,13 +6,13 @@ export default class ButtonIcon extends React.Component {
     render() {
         let button;
         if (Platform.OS === 'ios') {
-            button = <TouchableHighlight onPress={() => this.props.action(this.props.arguments)} >
+            button = <TouchableHighlight onPress={() => this.props.action()} >
                             <View style={[styles.button, this.props.style]}>
                                 <Ionicons name={this.props.name} size={24} color='rgba(255,255,255,.54)' />
                             </View>
                         </TouchableHighlight>
         } else {
-            button = <TouchableNativeFeedback onPress={() => this.props.action(this.props.arguments)} background={TouchableNativeFeedback.Ripple('rgba(255,255,255,.25)', true)} >
+            button = <TouchableNativeFeedback onPress={() => this.props.action()} background={TouchableNativeFeedback.Ripple('rgba(255,255,255,.25)', true)} >
                             <View style={[styles.button, this.props.style]}>
                                 <Ionicons name={this.props.name} size={24} color='rgba(255,255,255,.54)' />
                             </View>

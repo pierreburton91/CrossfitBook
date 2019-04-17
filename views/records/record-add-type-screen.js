@@ -5,9 +5,14 @@ import DetailsHeader from '../../shared-components/details-header.js';
 import MovesData from '../../static/moves-data.js';
 
 export default class AddRecordType extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this._handleCancelAction = this._handleCancelAction.bind(this);
+    }
     
-    _handleCancelAction(navigation) {
-        navigation.goBack();
+    _handleCancelAction() {
+        this.props.navigation.goBack();
     }
 
     _renderListItem(item, index) {
@@ -38,7 +43,7 @@ export default class AddRecordType extends React.Component {
 
         return (
         <View style={styles.container}>
-            <DetailsHeader navigation={this.props.navigation} action={this._handleCancelAction} title={'New record'} isForm={true} label={'CANCEL'} />
+            <DetailsHeader action={this._handleCancelAction} title={'New record'} isForm={true} label={'CANCEL'} />
             <SectionList 
                 contentContainerStyle={{paddingTop: 16}}
                 sections={dataStub}

@@ -4,24 +4,16 @@ import colors from '../shared-styles/colors';
 
 export default class ButtonFlat extends React.Component {
 
-    _actionHandler(argument) {
-        if (argument == undefined) {
-            this.props.action();
-        } else {
-            this.props.action(argument);
-        }
-    }
-
     render() {
         let button;
         if (Platform.OS === 'ios') {
-            button = <TouchableHighlight onPress={() => { if (!this.props.disabled) { this._actionHandler(this.props.arguments) } }} >
+            button = <TouchableHighlight onPress={() => { !this.props.disabled ? this.props.action() : false }} >
                 <View style={[styles.button, this.props.style, this.props.disabled ? styles.disabled : '']}>
                     <Text style={styles.label}>{this.props.label}</Text>
                 </View>
             </TouchableHighlight>
         } else {
-            button = <TouchableNativeFeedback onPress={() => { if (!this.props.disabled) { this._actionHandler(this.props.arguments) } }} background={(!this.props.disabled) ? TouchableNativeFeedback.Ripple('rgba(0,0,0,.25)') : TouchableNativeFeedback.Ripple('transparent')} >
+            button = <TouchableNativeFeedback onPress={() => { !this.props.disabled ? this.props.action() : false }} background={(!this.props.disabled) ? TouchableNativeFeedback.Ripple('rgba(0,0,0,.25)') : TouchableNativeFeedback.Ripple('transparent')} >
                 <View style={[styles.button, this.props.style, this.props.disabled ? styles.disabled : '']}>
                     <Text style={styles.label}>{this.props.label}</Text>
                 </View>
