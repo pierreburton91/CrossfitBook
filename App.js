@@ -21,19 +21,19 @@ const styles = StyleSheet.create({
 });
 
 const RecordsStack = createStackNavigator({
-  Main: RecordsScreen,
-  Details: RecordDetailsScreen,
+  RecordsMain: RecordsScreen,
+  RecordDetails: RecordDetailsScreen,
   AddRecord_newType: AddRecordType,
   AddRecord_newValues: AddRecordValues 
 },
 {
-  initialRouteName: 'Main',
+  initialRouteName: 'RecordsMain',
   headerMode: 'none',
   navigationOptions: ({navigation}) => {
     const { routeName } = navigation.state.routes[navigation.state.index];
     let navigationOptions = {};
 
-    if (routeName !== 'Main') {
+    if (routeName !== 'RecordsMain') {
       navigationOptions.tabBarVisible = false;
     }
 
@@ -42,19 +42,19 @@ const RecordsStack = createStackNavigator({
 });
 
 const BenchmarksStack = createStackNavigator({
-  Main: BenchmarksScreen,
-  Details: BenchmarkDetailsScreen,
+  BenchmarksMain: BenchmarksScreen,
+  BenchmarkDetails: BenchmarkDetailsScreen,
   AddBenchmark_select: AddBenchmarkSelect,
   AddBenchmark_newValues: AddBenchmarkValues 
 },
 {
-  initialRouteName: 'Main',
+  initialRouteName: 'BenchmarksMain',
   headerMode: 'none',
   navigationOptions: ({navigation}) => {
     const { routeName } = navigation.state.routes[navigation.state.index];
     let navigationOptions = {};
 
-    if (routeName !== 'Main') {
+    if (routeName !== 'BenchmarksMain') {
       navigationOptions.tabBarVisible = false;
     }
 

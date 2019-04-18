@@ -156,7 +156,7 @@ export default class AddBenchmarkValues extends React.Component {
     }
 
     _cancelAddNew() {
-        this.props.navigation.navigate('Main');
+        this.props.navigation.navigate('BenchmarksMain');
     }
 
     _handleSuggestionSelect(suggestionText) {
@@ -208,7 +208,7 @@ export default class AddBenchmarkValues extends React.Component {
         command.unit = this.state.radioValue.value;
         command.date = new Date(this.state.date);
         console.log(command);
-        this.props.navigation.navigate('Main');
+        this.props.navigation.navigate('BenchmarksMain', {shouldRefresh: true});
     }
 
     render() {

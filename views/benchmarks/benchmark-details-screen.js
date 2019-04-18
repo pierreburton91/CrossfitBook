@@ -146,7 +146,7 @@ export default class BenchmarkDetailsScreen extends React.Component {
                     <AdMobBanner
                         bannerSize="banner"
                         adUnitID="ca-app-pub-3940256099942544/6300978111" // ca-app-pub-3940256099942544/6300978111
-                        testDeviceID={Constants.installationId}
+                        // testDeviceID={Constants.installationId}
                         onDidFailToReceiveAdWithError={() => this.setState({ showAd: false })} />
                 </View>
                 <Text style={[styles.textYellow, componentStyles.previousScoreHeader]}>Previous scores</Text>
