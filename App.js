@@ -80,7 +80,6 @@ const TabNavigator = createBottomTabNavigator({
         iconName = `tune`;
       }
 
-      // You can return any component that you like here!
       return <MaterialCommunityIcons name={iconName} size={25} color={tintColor} />;
     }
   }),

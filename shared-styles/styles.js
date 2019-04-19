@@ -13,6 +13,9 @@ export default styles = StyleSheet.create({
     textYellow: {
         color: colors.accent
     },
+    textPurple: {
+        color: colors.purple
+    },
     textMuted: {
         color: colors.muted
     },
@@ -23,6 +26,12 @@ export default styles = StyleSheet.create({
         height: 8,
         width: '100%',
         backgroundColor: 'transparent'
+    },
+    inputTitle: {
+        fontWeight: '700',
+        marginLeft: 16,
+        marginRight: 16,
+        marginTop: 32
     },
     textInput: {
       paddingBottom: 8,

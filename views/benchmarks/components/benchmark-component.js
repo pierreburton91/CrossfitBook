@@ -47,7 +47,7 @@ export default class BenchmarkComponent extends React.Component {
                                             <Text numberOfLines={1} ellipsizeMode={'tail'} style={styles.recordTitle}>{this.props.record.title}</Text>
                                             <Text numberOfLines={2} ellipsizeMode={'tail'} style={styles.recordText}>{this.props.record.date}</Text>
                                         </View>
-                                        <Text style={styles.recordValue}>{this.props.record.value}</Text>
+                                        <Text style={styles[this.props.record.isScaled ? 'recordValueScaled' : 'recordValue']}>{this.props.record.value}</Text>
                                     </View>
                                 </View>
                             </TouchableNativeFeedback>
@@ -86,6 +86,12 @@ const styles = StyleSheet.create({
     recordValue: {
         fontWeight: 'bold',
         color: '#EEFF41',
+        fontSize: 24,
+        alignSelf: 'center'
+    },
+    recordValueScaled: {
+        fontWeight: 'bold',
+        color: '#AC41FF',
         fontSize: 24,
         alignSelf: 'center'
     }

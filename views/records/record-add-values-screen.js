@@ -221,24 +221,24 @@ export default class AddRecordValues extends React.Component {
                     this.scroll = ref
                 }}>
                     <DetailsHeader action={this._handleCancelAction} title={'New record'} subTitle={recordType} isForm={true} label={'CANCEL'} />
-                    <Text style={[styles.textYellow, componentStyles.inputTitle]}>Describe your record</Text>
+                    <Text style={[styles.textYellow, styles.inputTitle]}>Describe your record</Text>
                     <TextInput onFocus={(event) => {
                         this._scrollToInput(findNodeHandle(event.target))
                     }} editable={!this.state.isUpdate} returnKeyType='done' style={styles.textInput} value={this.state.descValue} underlineColorAndroid={colors.accent} clearButtonMode='while-editing' keyboardAppearance='dark' onChangeText={(text) => this._handleDescInput(text)} />
                     <View style={this.state.isUpdate ? {display: 'none'} : componentStyles.suggestionsContainer}>
                         {this._renderSuggestions()}
                     </View>
-                    <Text style={[styles.textYellow, componentStyles.inputTitle]}>Record type</Text>
+                    <Text style={[styles.textYellow, styles.inputTitle]}>Record type</Text>
                     <View style={{ flexShrink: 1 }}>
                         <RadioGroup labelStyle={styles.text} style={{ margin: 16 }} color={colors.accent} radioButtons={this.state.radioButtons} onPress={this._handleRadioPress} />
                     </View>
                     <View style={{ display: showRemainingInputs ? 'flex' : 'none' }}>
                         <View style={componentStyles.unitInputLabel}>
-                            <Text style={[styles.textYellow, componentStyles.inputTitle]}>Your score</Text>
+                            <Text style={[styles.textYellow, styles.inputTitle]}>Your score</Text>
                             <Text style={[styles.textMuted, componentStyles.unit]}>{unit}</Text>
                         </View>
                         {this._renderRecordInput()}
-                        <Text style={[styles.textYellow, componentStyles.inputTitle]}>Achieving date</Text>
+                        <Text style={[styles.textYellow, styles.inputTitle]}>Achieving date</Text>
                         <DatePicker
                             date={this.state.date}
                             mode="date"
@@ -261,11 +261,6 @@ const componentStyles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between'
-    },
-    inputTitle: {
-        fontWeight: '500',
-        marginLeft: 16,
-        marginTop: 32
     },
     unit: {
         marginRight: 16,

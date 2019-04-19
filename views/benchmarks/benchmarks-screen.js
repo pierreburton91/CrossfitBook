@@ -59,8 +59,6 @@ export default class BenchmarksScreen extends React.Component {
     command.wod = record.wod;
     command.valuesTypesKey = record.valuesTypesKey;
     command.unit = record.value.split(' ')[1];
-    command.isScaled = record.isScaled;
-    command.scaleText = record.scaleText;
     this.props.navigation.navigate('AddBenchmark_newValues', { command: command });
   }
 
@@ -95,7 +93,7 @@ export default class BenchmarksScreen extends React.Component {
 
   _checkForRefresh() {
     const shouldRefresh = this.props.navigation.getParam('shouldRefresh', false);
-
+    this.props.navigation.setParams({shouldRefresh: false});
     if (shouldRefresh) {
       this._loadAndReturn('isLoading');
     }

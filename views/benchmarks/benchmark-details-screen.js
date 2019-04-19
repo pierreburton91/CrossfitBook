@@ -4,7 +4,7 @@ import styles from '../../shared-styles/styles.js';
 import FAB from '../../shared-components/fab.js';
 import DetailsHeader from '../../shared-components/details-header.js';
 import ButtonIcon from '../../shared-components/button-icon.js';
-import AddRecordCommand from '../../commands/add-record-command.js';
+import AddBenchmarkCommand from '../../commands/add-benchmark-command.js';
 import Swipeout from 'react-native-swipeout';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Menu, { MenuItem } from "react-native-material-menu";
@@ -17,12 +17,10 @@ export default class BenchmarkDetailsScreen extends React.Component {
         this.state = {
             record: this.props.navigation.getParam('record', {}),
             data: [
-                { title: 'Hello1', text: 'My first item', valuesTypesKey: 0, date: '02-01-2018', value: '121 Kg' },
-                { title: 'Hello1', text: 'My first item', valuesTypesKey: 0, date: '02-01-2018', value: '122 Kg' },
-                { title: 'Hello1', text: 'My first item', valuesTypesKey: 0, date: '02-01-2018', value: '123 Kg' },
-                { title: 'Hello1', text: 'My first item', valuesTypesKey: 0, date: '02-01-2018', value: '124 Kg' },
-                { title: 'Hello1', text: 'My first item', valuesTypesKey: 0, date: '02-01-2018', value: '125 Kg' },
-                { title: 'Hello1', text: 'My first item', valuesTypesKey: 0, date: '02-01-2018', value: '126 Kg' }
+                { title: 'Annie', valuesTypesKey: 1, scaleText: 'I scaled :(I scaled :(I scaled :(I scaled :(', value: '00:10:42', date: '01-01-2018', isScaled: true },
+                { title: 'Annie', valuesTypesKey: 1, scaleText: 'I scaled :(I scaled :(I scaled :(I scaled :(I scaled :(', value: '00:10:42', date: '01-01-2018', isScaled: true },
+                { title: 'Annie', valuesTypesKey: 1, scaleText: '', value: '00:10:42', date: '01-01-2018', isScaled: false },
+                { title: 'Annie', valuesTypesKey: 1, scaleText: 'test', value: '00:10:42', date: '01-01-2018', isScaled: false }
             ],
             showAd: true
         }
@@ -44,22 +42,23 @@ export default class BenchmarkDetailsScreen extends React.Component {
     }
 
     _handleAddNewRecord() {
-        const command = new AddRecordCommand();
+        const command = new AddBenchmarkCommand();
         command.title = this.state.record.title;
-        command.text = this.state.record.text;
+        command.wod = this.state.record.wod;
         command.valuesTypesKey = this.state.record.valuesTypesKey;
         command.unit = this.state.record.value.split(' ')[1];
         this.props.navigation.navigate('AddBenchmark_newValues', { command: command });
     }
 
     _handleUpdateRecord(item) {
-        const command = new AddRecordCommand();
+        const command = new AddBenchmarkCommand();
         command.title = item.title;
-        command.text = item.text;
+        command.wod = item.wod;
         command.valuesTypesKey = item.valuesTypesKey;
-        command.unit = item.value.split(' ')[1];
         command.value = item.value.split(' ')[0];
         command.date = item.date;
+        command.isScaled = item.isScaled;
+        command.scaleText = item.scaleText;
         this.props.navigation.navigate('AddBenchmark_newValues', { command: command });
     }
 
@@ -78,7 +77,7 @@ export default class BenchmarkDetailsScreen extends React.Component {
         try {
             const result = await Share.share({
                 title: 'Test Share',
-                message: `Scored ${this.state.record.value} on ${this.state.record.title} - ${this.state.record.text}\nhttps://google.com`,
+                message: `Scored ${this.state.record.value} on ${this.state.record.title}\nhttps://google.com`,
             });
 
             if (result.action === Share.sharedAction) {
@@ -116,8 +115,12 @@ export default class BenchmarkDetailsScreen extends React.Component {
         return (
             <Swipeout key={this.props.index} right={swipeRightOptns} left={swipeLeftOptns} sensitivity={12} autoClose={true} backgroundColor='transparent'>
                 <View key={index} style={componentStyles.previousScoreContainer}>
-                    <Text style={[styles.textMuted, componentStyles.previousScoreText]}>{item.date}</Text>
-                    <Text style={[styles.textYellow, componentStyles.previousScoreText]}>{item.value}</Text>
+                    <View style={{ display: item.isScaled ? 'flex' : 'none', flex: 1 }}>
+                        <Text style={[styles.textMuted, componentStyles.previousScoreText]}>{item.date}</Text>
+                        <Text style={[styles.textMuted, componentStyles.scaledText]}>{item.scaleText}</Text>
+                    </View>
+                    <Text style={[{ display: !item.isScaled ? 'flex' : 'none' }, styles.textMuted, componentStyles.previousScoreText]}>{item.date}</Text>
+                    <Text style={[styles[item.isScaled ? 'textPurple' : 'textYellow'], componentStyles.previousScoreText]}>{item.value}</Text>
                 </View>
             </Swipeout>
         );
@@ -126,12 +129,13 @@ export default class BenchmarkDetailsScreen extends React.Component {
     render() {
         const record = this.state.data[0];
         const previousRecords = this.state.data.slice(1);
+        const hasMultipleRecords = previousRecords.length > 1 ? true : false;
 
         return (
             <View style={styles.container}>
-                <DetailsHeader action={this._handleCloseAction} title={record.title} subTitle={record.text} isForm={false} />
+                <DetailsHeader action={this._handleCloseAction} title={record.title} isForm={false} />
                 <View style={componentStyles.scoreContainer}>
-                    <Text style={[styles.textYellow, componentStyles.mainScore]}>{record.value}</Text>
+                    <Text style={[styles[record.isScaled ? 'textPurple' : 'textYellow'], componentStyles.mainScore]}>{record.value}</Text>
 
                     <Menu ref={ref => this._menu = ref} style={styles.bgDarkLight} button={
                         <ButtonIcon action={() => this._setMenuVisible()} name='md-more' style={{ marginRight: 8, marginTop: 4 }} />
@@ -141,6 +145,7 @@ export default class BenchmarkDetailsScreen extends React.Component {
                         <MenuItem underlayColor={'rgba(255,255,255,.54)'} textStyle={styles.text} onPress={() => { this._menu.hide(); this._handleShare() }}>Share</MenuItem>
                     </Menu>
                 </View>
+                <Text style={[styles.textMuted, componentStyles.mainScoreDate, componentStyles.scaledText]}>{record.scaleText}</Text>
                 <Text style={[styles.textMuted, componentStyles.mainScoreDate]}>Performed on {record.date}</Text>
                 <View style={{ display: this.state.showAd ? 'flex' : 'none', alignItems: 'center', marginBottom: 16 }}>
                     <AdMobBanner
@@ -149,15 +154,17 @@ export default class BenchmarkDetailsScreen extends React.Component {
                         // testDeviceID={Constants.installationId}
                         onDidFailToReceiveAdWithError={() => this.setState({ showAd: false })} />
                 </View>
-                <Text style={[styles.textYellow, componentStyles.previousScoreHeader]}>Previous scores</Text>
-                <FlatList
-                    contentContainerStyle={{ paddingBottom: 80 }}
-                    data={previousRecords}
-                    renderItem={({ item, index }) =>
-                        this._renderPreviousRecords(item, index)
-                    }
-                    keyExtractor={(item, index) => item + index}
-                />
+                <View style={{ display: hasMultipleRecords ? 'flex' : 'none' }}>
+                    <Text style={[styles.textYellow, componentStyles.previousScoreHeader]}>Previous scores</Text>
+                    <FlatList
+                        contentContainerStyle={{ paddingBottom: 80 }}
+                        data={previousRecords}
+                        renderItem={({ item, index }) =>
+                            this._renderPreviousRecords(item, index)
+                        }
+                        keyExtractor={(item, index) => item + index}
+                    />
+                </View>
                 <FAB onPress={() => this._handleAddNewRecord(record)} />
             </View>
         );
@@ -185,14 +192,18 @@ const componentStyles = StyleSheet.create({
     previousScoreHeader: {
         marginLeft: 16,
         marginBottom: 16,
-        fontWeight: '700'
+        fontWeight: '500'
     },
     previousScoreContainer: {
         flexDirection: 'row',
         padding: 16,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     previousScoreText: {
         fontSize: 16
+    },
+    scaledText: {
+        opacity: .5,
+        fontStyle: 'italic'
     }
 });

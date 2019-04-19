@@ -37,21 +37,21 @@ export default class AddBenchmarkValues extends React.Component {
         const command = this.props.navigation.getParam('command', {});
 
         if (command.value != null) {
-            this.isUpdate = true;
+            this.state.isUpdate = true;
             this.state.radioButtons = command.isScaled ? [{ label: 'Rx', value: false }, { label: 'Scaled', value: true, checked: true }] : [{ label: 'Rx', value: false, checked: true }, { label: 'Scaled', value: true }];
             this.state.radioValue = command.isScaled;
-            this.state.scaleTextValue = command.scaleText;
             this.state.date = command.date;
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         if (this.state.radioButtons.find(e => e.checked == true)) {
             this._handleRadioPress(this.state.radioButtons);
         }
 
         if (this.state.isUpdate) {
-            this.setState({ resultValue: this.props.navigation.getParam('command').value, isResultValid: true });
+            const command = this.props.navigation.getParam('command');
+            this.setState({ resultValue: command.value, isResultValid: true, scaleTextValue: command.scaleText });
         }
 
         this.keyboardDidShowListener = Keyboard.addListener(
@@ -110,7 +110,6 @@ export default class AddBenchmarkValues extends React.Component {
         this.setState({ radioButtons });
         this.setState({ radioValue: this.state.radioButtons.find(e => e.checked == true).value });
         this.setState({ scaleTextValue: '' });
-        console.log(this.state.radioValue);
     }
 
     _handleTimeInput(text) {
@@ -166,25 +165,25 @@ export default class AddBenchmarkValues extends React.Component {
                 }}>
                     <DetailsHeader action={this._handleCancelAction} title={'New record'} subTitle={recordType} isForm={true} label={'CANCEL'} />
                     <View style={componentStyles.unitInputLabel}>
-                        <Text style={[styles.textYellow, componentStyles.inputTitle]}>Your score</Text>
+                        <Text style={[styles.textYellow, styles.inputTitle]}>Your score</Text>
                         <Text style={[styles.textMuted, componentStyles.unit]}>{unit}</Text>
                     </View>
                     {this._renderRecordInput()}
 
-                    <Text style={[styles.textYellow, componentStyles.inputTitle]}>Difficulty</Text>
+                    <Text style={[styles.textYellow, styles.inputTitle]}>Difficulty</Text>
                     <View style={{ flexShrink: 1 }}>
                         <RadioGroup labelStyle={styles.text} style={{ margin: 16 }} color={colors.accent} radioButtons={this.state.radioButtons} onPress={this._handleRadioPress} />
                     </View>
                     <View style={{ display: showRemainingInputs ? 'flex' : 'none' }}>
                         <View style={componentStyles.unitInputLabel}>
-                            <Text style={[styles.textYellow, componentStyles.inputTitle]}>Scaling info</Text>
+                            <Text style={[styles.textYellow, styles.inputTitle]}>Scaling info</Text>
                             <Text style={[styles.textMuted, componentStyles.unit]}>(Optionnal)</Text>
                         </View>
                         <TextInput onFocus={(event) => {
                             this._scrollToInput(findNodeHandle(event.target))
                         }} returnKeyType='done' style={styles.textInput} value={this.state.scaleTextValue} underlineColorAndroid={colors.accent} clearButtonMode='while-editing' keyboardAppearance='dark' onChangeText={(text) => this._handleDescInput(text)} />
                     </View>
-                    <Text style={[styles.textYellow, componentStyles.inputTitle]}>Achieving date</Text>
+                    <Text style={[styles.textYellow, styles.inputTitle]}>Achieving date</Text>
                     <DatePicker
                         date={this.state.date}
                         mode="date"
@@ -206,11 +205,6 @@ const componentStyles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between'
-    },
-    inputTitle: {
-        fontWeight: '500',
-        marginLeft: 16,
-        marginTop: 32
     },
     unit: {
         marginRight: 16,
