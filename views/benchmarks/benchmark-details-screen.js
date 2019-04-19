@@ -49,7 +49,7 @@ export default class BenchmarkDetailsScreen extends React.Component {
         command.text = this.state.record.text;
         command.valuesTypesKey = this.state.record.valuesTypesKey;
         command.unit = this.state.record.value.split(' ')[1];
-        this.props.navigation.navigate('AddRecord_newValues', { command: command });
+        this.props.navigation.navigate('AddBenchmark_newValues', { command: command });
     }
 
     _handleUpdateRecord(item) {
@@ -60,7 +60,7 @@ export default class BenchmarkDetailsScreen extends React.Component {
         command.unit = item.value.split(' ')[1];
         command.value = item.value.split(' ')[0];
         command.date = item.date;
-        this.props.navigation.navigate('AddRecord_newValues', { command: command });
+        this.props.navigation.navigate('AddBenchmark_newValues', { command: command });
     }
 
     _handleDeleteRecord(item) {

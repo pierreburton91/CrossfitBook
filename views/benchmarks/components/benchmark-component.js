@@ -31,7 +31,7 @@ export default class BenchmarkComponent extends React.Component {
                                     <View style={styles.recordDataContainer} >
                                         <View style={styles.recordTextContainer}>
                                             <Text numberOfLines={1} ellipsizeMode={'tail'} style={styles.recordTitle}>{this.props.record.title}</Text>
-                                            <Text numberOfLines={2} ellipsizeMode={'tail'} style={styles.recordText}>{this.props.record.text}</Text>
+                                            <Text numberOfLines={2} ellipsizeMode={'tail'} style={styles.recordText}>{this.props.record.date}</Text>
                                         </View>
                                         <Text style={styles.recordValue}>{this.props.record.value}</Text>
                                     </View>
@@ -45,7 +45,7 @@ export default class BenchmarkComponent extends React.Component {
                                     <View style={styles.recordDataContainer} >
                                         <View style={styles.recordTextContainer}>
                                             <Text numberOfLines={1} ellipsizeMode={'tail'} style={styles.recordTitle}>{this.props.record.title}</Text>
-                                            <Text numberOfLines={2} ellipsizeMode={'tail'} style={styles.recordText}>{this.props.record.text}</Text>
+                                            <Text numberOfLines={2} ellipsizeMode={'tail'} style={styles.recordText}>{this.props.record.date}</Text>
                                         </View>
                                         <Text style={styles.recordValue}>{this.props.record.value}</Text>
                                     </View>

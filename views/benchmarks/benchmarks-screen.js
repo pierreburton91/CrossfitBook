@@ -5,7 +5,7 @@ import { LinearGradient, AdMobBanner } from 'expo';
 import styles from '../../shared-styles/styles.js';
 import FAB from '../../shared-components/fab.js';
 import HeaderHero from '../../shared-components/header.js';
-import AddRecordCommand from '../../commands/add-record-command.js';
+import AddBenchmarkCommand from '../../commands/add-benchmark-command.js';
 import dataStub from '../../static/benchmarks-stub.js';
 import BenchmarkComponent from './components/benchmark-component.js';
 import colors from '../../shared-styles/colors.js';
@@ -50,16 +50,18 @@ export default class BenchmarksScreen extends React.Component {
   }
 
   _handleNewRecord() {
-    this.props.navigation.navigate('AddRecord_newType', { command: new AddRecordCommand() });
+    this.props.navigation.navigate('AddBenchmark_select', { command: new AddBenchmarkCommand() });
   }
 
   _handleAddNewRecord(record) {
-    const command = new AddRecordCommand();
+    const command = new AddBenchmarkCommand();
     command.title = record.title;
-    command.text = record.text;
+    command.wod = record.wod;
     command.valuesTypesKey = record.valuesTypesKey;
     command.unit = record.value.split(' ')[1];
-    this.props.navigation.navigate('AddRecord_newValues', { command: command });
+    command.isScaled = record.isScaled;
+    command.scaleText = record.scaleText;
+    this.props.navigation.navigate('AddBenchmark_newValues', { command: command });
   }
 
   _renderRecords(item, index) {
@@ -70,7 +72,7 @@ export default class BenchmarksScreen extends React.Component {
             <AdMobBanner
               bannerSize="banner"
               adUnitID="ca-app-pub-3940256099942544/6300978111" // ca-app-pub-3940256099942544/6300978111
-              // // testDeviceID={Constants.installationId}
+              // testDeviceID={Constants.installationId}
               onDidFailToReceiveAdWithError={() => this.setState({ showAd: false })} />
           </View>
           <BenchmarkComponent _handleAddNewRecord={this._handleAddNewRecord} _handleDeleteRecord={this._handleDeleteRecord} _handleRecordSelect={this._handleRecordSelect} key={index} record={item} />

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, SectionList, Platform, TouchableHighlight, TouchableNativeFeedback } from 'react-native';
 import styles from '../../shared-styles/styles.js';
 import DetailsHeader from '../../shared-components/details-header.js';
-import MovesData from '../../static/moves-data.js';
+import BenchmarksData from '../../static/benchmarks-data.js';
 
 export default class AddBenchmarkSelect extends React.Component {
     constructor(props) {
@@ -35,11 +35,12 @@ export default class AddBenchmarkSelect extends React.Component {
         const command = this.props.navigation.getParam('command', {});
         command.title = item.name;
         command.valuesTypesKey = item.valuesTypesKey;
-        this.props.navigation.navigate('AddRecord_newValues', {command: command});
+        command.wod = item.wod;
+        this.props.navigation.navigate('AddBenchmark_newValues', {command: command});
     }
 
     render() {
-        const dataStub = MovesData;
+        const dataStub = BenchmarksData;
 
         return (
         <View style={styles.container}>
