@@ -13,7 +13,7 @@ export default class ButtonFlat extends React.Component {
                 </View>
             </TouchableHighlight>
         } else {
-            button = <TouchableNativeFeedback onPress={() => { !this.props.disabled ? this.props.action() : false }} background={(!this.props.disabled) ? TouchableNativeFeedback.Ripple('rgba(0,0,0,.25)') : TouchableNativeFeedback.Ripple('transparent')} >
+            button = <TouchableNativeFeedback onPress={() => { !this.props.disabled ? this.props.action() : false }} background={(!this.props.disabled) ? TouchableNativeFeedback.Ripple('rgba(255,255,255,.25)') : TouchableNativeFeedback.Ripple('transparent')} >
                 <View style={[styles.button, this.props.style, this.props.disabled ? styles.disabled : '']}>
                     <Text style={styles.label}>{this.props.label}</Text>
                 </View>

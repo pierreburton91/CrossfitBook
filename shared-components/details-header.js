@@ -8,7 +8,7 @@ export default class DetailsHeader extends React.Component {
         const closeButton = this.props.isForm ? <ButtonFlat action={this.props.action} style={{alignSelf: 'flex-start', marginTop: 8}} label={this.props.label} /> : <ButtonIcon action={this.props.action} name='md-close' style={{alignSelf: 'flex-start', marginTop: 4, marginRight: 8}} />
 
         return (
-            <View style={styles.header}>
+            <View style={[styles.header, this.props.style]}>
                 <View style={styles.textContainer}>
                     <Text numberOfLines={2} ellipsizeMode={'tail'} style={styles.textHeader}>{this.props.title}</Text>
                     <Text numberOfLines={2} ellipsizeMode={'tail'} style={styles.textHeaderSub}>{this.props.subTitle}</Text>
